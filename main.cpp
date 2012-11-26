@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <cstdlib>
+#include <io.h>
 using namespace std;
 typedef unsigned char uchar;
 typedef vector<uchar> text;
@@ -40,6 +41,11 @@ int charNum(char sym, char *arr, int size){
 		if (i==(size-1)) {return -1;};
 	}
 }
+
+bool fileExists(const char *fname)
+			{
+			  return access(fname, 0) != -1;
+			}
 
 int main(int argc, char *argv[]) {
 if (argc==1) {return -1;};
@@ -84,11 +90,17 @@ for (int i=1;i<argc;i++) {
 	} 
 };
 
+if (key<1) {printf("%s\n","Key must be positive"); incorrectInput(); return 0;};
+if (!fileExists(argv[inFile])) {printf("%s\n","File not found"); return 0;} ;
+
+
 int size;
 if (alphabetInput) {size=arrSize(argv[alphabet])-11; }
 else {if (alphabet!=0) {size=sizeof(argv[alphabet]);} else {size=62;} };
 char alphabetArr[size];
 char *alphaLink=&alphabetArr[0];
+
+if (key>size) {printf("%s\n", "Key must be less than length of alphabet"); return 0;};
 
 if (alphabetInput) {
 	for (int i=0; i<size; i++) {
@@ -122,8 +134,6 @@ int *buf=new int();
 inF=fopen(argv[inFile],"r");
 while (*buf!=EOF) {
 	*buf=fgetc(inF);
-	printf("%d\n",*buf );
-	//itoa(*buf,&cbuf,10);
 	fileText->push_back(*buf);
 }
 fclose(inF);
@@ -144,18 +154,11 @@ delete(symbol);
 
 if (outFile!=0) {inF=fopen(argv[outFile],"w");}
 else {inF=fopen("result.txt","w");};
-//inF=fopen("result.txt","w");
 for (long i=0;i<textSize-1;i++) {fputc(fileText->at(i),inF);}
 
 fclose(inF);
 
-printf("%i\n", fileText->at(0));
-//printf("%d\n",charNum('l',alphaLink,size) );
-printf("%s\n",argv[inFile] );
-printf("%d\n", key);
-printf("%d\n", alphabetArr[0]);
-printf("%d\n", alphabetArr[1]);
-printf("%d\n", alphaLink[1]);
-printf("%d\n", fileText->at(1));
+printf("%s","Complete. Result is in ");
+if (outFile!=0) {printf("%s\n",argv[outFile]);} else {printf("%s\n","result.txt");};
 return 0;
 }
